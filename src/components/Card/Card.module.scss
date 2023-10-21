@@ -1,0 +1,16 @@
+.container {
+    position: relative;
+    border: 1px solid var(--clr-black);
+    border-radius: 5px;
+    width: 350px;
+    height: 350px;
+    margin: 10px;
+    background-color: var(--clr-grey-light);
+
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 286px;
+    }
+}
