@@ -1,9 +1,19 @@
 .container {
+    .center{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .header {
-        margin: 40px 70px;
-
+        margin: 40px 70px; 
         @media (max-width:50em) {
             margin: 27px;
+        }
+    }
+    .mx10{
+        margin: 0px 70px;
+        @media (max-width:50em) {
+            margin: 2px;
         }
     }
 

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { fetchProducts } from "../utils/api.action";
-import styles from "./Homapage.module.scss";
-import Card from "../components/Card";
 import Select from "react-select";
-import { categories } from "../utils/constants";
-import { useDispatch, useSelector } from "react-redux";
-import { loadCatgeoryItemsToState } from "../redux/thunk";
 import toast, { Toaster } from "react-hot-toast";
+import styles from "./Homapage.module.scss";
+import Card from "../../components/Card";
+import { categories } from "../../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { loadCatgeoryItemsToState } from "../../redux/thunk";
+import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const navigate = useNavigate();
   const state = useSelector((state) => state);
   const [loader, setLoader] = useState(false);
   const [products, setProducts] = useState([]);
@@ -17,18 +17,6 @@ const Homepage = () => {
 
   const handleCategoriesSelection = ({ value, label }) => {
     dispatch(loadCatgeoryItemsToState(value));
-  };
-
-  const getProductsFromAPI = async () => {
-    try {
-      setLoader(true);
-      const productsJSON = await fetchProducts();
-      setProducts(productsJSON?.data || []);
-    } catch (err) {
-      toast.error(err?.message);
-    } finally {
-      setLoader(false);
-    }
   };
 
   const handleStateChange = () => {
@@ -45,11 +33,15 @@ const Homepage = () => {
   };
 
   useEffect(() => {
-    getProductsFromAPI();
+    if (localStorage.getItem("access-token-products")) {
+      dispatch(loadCatgeoryItemsToState());
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   useEffect(() => {
-    setLoader(state.LOADING || false)
+    setLoader(state.LOADING || false);
     handleStateChange();
   }, [state]);
 
@@ -58,11 +50,11 @@ const Homepage = () => {
       <div>
         <Toaster />
       </div>
-      <section>
+      <section className={styles.center}>
         <h1 className={styles.header}> My products </h1>
         <Select
+          className={styles.mx10}
           placeholder={<div>Select Categories</div>}
-          defaultValue={selectedOption}
           onChange={handleCategoriesSelection}
           options={categories}
         />
